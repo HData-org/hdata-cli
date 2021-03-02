@@ -97,26 +97,27 @@ function cli() {
 				}
 				break;
 			case 'getkey' :
-				if (keys[1] == undefined) {
+				if (keys[1] == undefined || keys[2] == undefined) {
 					getKeyQ();
 				} else {
-					getKey(keys[1]);
+					getKey(keys[1], keys[2]);
 				}
 				break;
 			case 'setkey' :
-				if (keys[1] == undefined) {
+				if (keys[1] == undefined || keys[2] == undefined || keys[3] == undefined) {
 					setKeyQ();
 				} else {
-					var key = keys[1];
-					var value = JSON.parse(keys.slice(2, keys.length).join(" "));
-					setKey(key, value);
+					var table = keys[1];
+					var key = keys[2];
+					var value = JSON.parse(keys.slice(3, keys.length).join(" "));
+					setKey(table, key, value);
 				}
 				break;
 			case 'deletekey' :
-				if (keys[1] == undefined) {
+				if (keys[1] == undefined || keys[2] == undefined) {
 					deleteKeyQ();
 				} else {
-					deleteKey(keys[1]);
+					deleteKey(keys[1], keys[2]);
 				}
 				break;
 			case 'gettables' :
