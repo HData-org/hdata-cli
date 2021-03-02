@@ -385,22 +385,25 @@ function deleteTableQ() {
 	});
 }
 
-function getKey(name) {
-	conn.getKey(name, function(res, err) {
+function getKey(table, name) {
+	conn.getKey(table, name, function(res, err) {
 		console.log(res);
 		rl.prompt();
 	});
 }
 
 function getKeyQ() {
-	rl.question("Key name: ", name => {
+	rl.question("Table name: ", name => {
 		rl.history = rl.history.slice(1);
-		getKey(name);
+		rl.question("Key name: ", key => {
+			rl.history = rl.history.slice(1);
+			getKey(name, key);
+		});
 	});
 }
 
-function setKey(name, value) {
-	conn.setKey(name, value, function(res, err) {
+function setKey(table, name, value) {
+	conn.setKey(table, name, value, function(res, err) {
 		if (res.status == "OK") {
 			console.log("Key set successfully");
 		} else {
@@ -411,11 +414,14 @@ function setKey(name, value) {
 }
 
 function setKeyQ() {
-	rl.question("Key name: ", name => {
+	rl.question("Table name: ", name => {
 		rl.history = rl.history.slice(1);
-		rl.question("Value: ", value => {
+		rl.question("Key name: ", key => {
 			rl.history = rl.history.slice(1);
-			setKey(name, value);
+			rl.question("Value: ", value => {
+				rl.history = rl.history.slice(1);
+				setKey(name, key, value);
+			});
 		});
 	});
 }
@@ -432,9 +438,12 @@ function deleteKey(name) {
 }
 
 function deleteKeyQ() {
-	rl.question("Key name: ", name => {
+	rl.question("Table name: ", name => {
 		rl.history = rl.history.slice(1);
-		deleteKey(name);
+		rl.question("Key name: ", key => {
+			rl.history = rl.history.slice(1);
+			deleteKey(name, key);
+		});
 	});
 }
 
