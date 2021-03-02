@@ -1,5 +1,5 @@
 {
-  "dependencies": {
-    "hdata": "^2.1.6"
-  }
+	"dependencies": {
+		"hdata": "^2.1.10"
+	}
 }
