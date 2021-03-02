@@ -25,6 +25,7 @@ function cli() {
 		switch (keys[0]) {
 			default :
 				console.log("Command does not exist");
+				rl.prompt();
 				break;
 			case 'status' :
 				status();
@@ -57,6 +58,13 @@ function cli() {
 					deleteUser(keys[1]);
 				}
 				break;
+			case 'getuser' :
+				if (keys[1] == undefined) {
+					getUserQ();
+				} else {
+					getUser(keys[1])
+				}
+				break;
 			case 'updateuser' :
 				if (keys[1] == undefined || keys[2] == undefined) {
 					updateUserQ();
@@ -67,12 +75,97 @@ function cli() {
 					updateUser(username, property, value);
 				}
 				break;
+			case 'updatepassword' :
+				if (keys[1] == undefined || keys[2] == undefined) {
+					updatePasswordQ();
+				} else {
+					updatePassword(keys[1], keys[2]);
+				}
+				break;
+			case 'createtable' :
+				if (keys[1] == undefined) {
+					createTableQ();
+				} else {
+					createTable(keys[1]);
+				}
+				break;
+			case 'deletetable' :
+				if (keys[1] == undefined) {
+					deleteTableQ();
+				} else {
+					deleteTable(keys[1]);
+				}
+				break;
+			case 'getkey' :
+				if (keys[1] == undefined) {
+					getKeyQ();
+				} else {
+					getKey(keys[1]);
+				}
+				break;
+			case 'setkey' :
+				if (keys[1] == undefined) {
+					setKeyQ();
+				} else {
+					var key = keys[1];
+					var value = JSON.parse(keys.slice(2, keys.length).join(" "));
+					setKey(key, value);
+				}
+				break;
+			case 'deletekey' :
+				if (keys[1] == undefined) {
+					deleteKeyQ();
+				} else {
+					deleteKey(keys[1]);
+				}
+				break;
+			case 'gettables' :
+				getTables();
+				break;
+			case 'queryall' :
+				if (keys[1] == undefined) {
+					queryAllQ();
+				} else {
+					var value = keys.slice(1, keys.length).join(" ");
+					queryAll(value);
+				}
+				break;
+			case 'querytable' :
+				if (keys[1] == undefined) {
+					queryTableQ();
+				} else {
+					var table = keys[1];
+					var value = keys.slice(2, keys.length).join(" ");
+					queryTable(table, value);
+				}
+				break;
+			case 'tableexists' :
+				if (keys[1] == undefined) {
+					tableExistsQ();
+				} else {
+					tableExists(keys[1]);
+				}
+				break;
+			case 'tablesize' :
+				if (keys[1] == undefined) {
+					tableSizeQ();
+				} else {
+					tableSize(keys[1]);
+				}
+				break;
+			case 'tablekeys' :
+				if (keys[1] == undefined) {
+					tableKeysQ();
+				} else {
+					tableKeys(keys[1]);
+				}
+				break;
 			case 'quit' :
 			case 'exit' :
 				rl.close();
 				break;
 		}
-		rl.prompt();
+		
 	}).on('close', () => {
 		console.log('Goodbye!');
 		process.exit(0);
@@ -107,7 +200,7 @@ function getStatus() {
 function login(user, password) {
 	conn.login(user, password, function(res, err) {
 		if (res.status == "OK") {
-			console.log(`\n\rLogged in as ${user}!`);
+			console.log(`Logged in as ${user}!`);
 			rl.prompt();
 		} else {
 			console.log("\n\rInvalid username or password");
@@ -122,6 +215,7 @@ function loginQ() {
 		rl.stdoutMuted = true;
 		rl.query = `Password: `;
 		rl.question(rl.query, password => {
+			console.log("");
 			rl.history = rl.history.slice(1);
 			rl.stdoutMuted = false;
 			login(user, password);
@@ -153,6 +247,7 @@ function createUser(username, password, perms) {
 		} else {
 			console.log("Error creating user: "+res.status);
 		}
+		rl.prompt();
 	});
 }
 
@@ -180,11 +275,13 @@ function deleteUser(username) {
 		} else {
 			console.log("Error deleting user: "+res.status);
 		}
+		rl.prompt();
 	});
 }
 
 function deleteUserQ() {
 	rl.question("Username: ", username => {
+		rl.history = rl.history.slice(1);
 		deleteUser(username);
 	});
 }
@@ -196,6 +293,7 @@ function updateUser(username, property, value) {
 		} else {
 			console.log("Error updating user: "+res.status);
 		}
+		rl.prompt();
 	});
 }
 
@@ -209,6 +307,238 @@ function updateUserQ() {
 				updateUser(username, property, JSON.parse(value));
 			});
 		});
+	});
+}
+
+function getUser(user) {
+	conn.getUser(user, function(res, err) {
+		console.log(res);
+		rl.prompt();
+	});
+}
+
+function getUserQ() {
+	rl.question("Username: ", username => {
+		rl.history = rl.history.slice(1);
+		getUser(username);
+	});
+}
+
+function updatePassword(user, password) {
+	conn.updatePassword(user, password, function(res, err) {
+		if (res.status == "OK") {
+			console.log("Password updated successfully");
+		} else {
+			console.log("Error updating password: "+res.status);
+		}
+		rl.prompt();
+	});
+}
+
+function updatePasswordQ() {
+	rl.question("Username: ", username => {
+		rl.history = rl.history.slice(1);
+		rl.stdoutMuted = true;
+		rl.query = "Password: ";
+		rl.question(rl.query, password => {
+			console.log("");
+			rl.history = rl.history.slice(1);
+			rl.stdoutMuted = false;
+			updatePassword(username, password);
+		});
+	});
+}
+
+function createTable(name) {
+	conn.createTable(name, function(res, err) {
+		if (res.status == "OK") {
+			console.log("Table created successfully");
+		} else {
+			console.log("Error creating table: "+res.status);
+		}
+		rl.prompt();
+	});
+}
+
+function createTableQ() {
+	rl.question("Table name: ", name => {
+		rl.history = rl.history.slice(1);
+		createTable(name);
+	});
+}
+
+function deleteTable(name) {
+	conn.deleteTable(name, function(res, err) {
+		if (res.status == "OK") {
+			console.log("Table deleted successfully");
+		} else {
+			console.log("Error deleting table: "+res.status);
+		}
+		rl.prompt();
+	});
+}
+
+function deleteTableQ() {
+	rl.question("Table name: ", name => {
+		rl.history = rl.history.slice(1);
+		deleteTable(name);
+	});
+}
+
+function getKey(name) {
+	conn.getKey(name, function(res, err) {
+		console.log(res);
+		rl.prompt();
+	});
+}
+
+function getKeyQ() {
+	rl.question("Key name: ", name => {
+		rl.history = rl.history.slice(1);
+		getKey(name);
+	});
+}
+
+function setKey(name, value) {
+	conn.setKey(name, value, function(res, err) {
+		if (res.status == "OK") {
+			console.log("Key set successfully");
+		} else {
+			console.log("Error setting key: "+res.status);
+		}
+		rl.prompt();
+	});
+}
+
+function setKeyQ() {
+	rl.question("Key name: ", name => {
+		rl.history = rl.history.slice(1);
+		rl.question("Value: ", value => {
+			rl.history = rl.history.slice(1);
+			setKey(name, value);
+		});
+	});
+}
+
+function deleteKey(name) {
+	conn.deleteKey(name, function(res, err) {
+		if (res.status == "OK") {
+			console.log("Key deleted successfully");
+		} else {
+			console.log("Error deleting key: "+res.status);
+		}
+		rl.prompt();
+	});
+}
+
+function deleteKeyQ() {
+	rl.question("Key name: ", name => {
+		rl.history = rl.history.slice(1);
+		deleteKey(name);
+	});
+}
+
+function getTables() {
+	conn.getTables(function(res, err) {
+		console.log(res);
+		rl.prompt();
+	});
+}
+
+function queryAll(query) {
+	conn.queryAll(query, function(res, err) {
+		if (res.status == "OK") {
+			console.log(res.matches);
+		} else {
+			console.log("Error querying all tables: "+res.status);
+		}
+		rl.prompt();
+	});
+}
+
+function queryAllQ() {
+	rl.question("Query: ", query => {
+		rl.history = rl.history.slice(1);
+		queryAll(query);
+	});
+}
+
+function queryTable(name, query) {
+	conn.queryAll(name, query, function(res, err) {
+		if (res.status == "OK") {
+			console.log(res.matches);
+		} else {
+			console.log("Error querying table: "+res.status);
+		}
+		rl.prompt();
+	});
+}
+
+function queryTableQ() {
+	rl.question("Table name: ", name => {
+		rl.history = rl.history.slice(1);
+		rl.question("Query: ", query => {
+			rl.history = rl.history.slice(1);
+			queryTable(name, query);
+		});
+	});
+}
+
+function tableExists(name) {
+	conn.tableExists(name, function(res, err) {
+		if (res.status == undefined) {
+			if (res) {
+				console.log(`Table ${name} exists`);
+			} else {
+				console.log(`Table ${name} does not exist`);
+			}
+		} else {
+			console.log("Error checking if table exists: "+res.status);
+		}
+		rl.prompt();
+	});
+}
+
+function tableExistsQ() {
+	rl.question("Table name: ", name => {
+		rl.history = rl.history.slice(1);
+		tableExists(name);
+	});
+}
+
+function tableSize(name) {
+	conn.tableSize(name, function(res, err) {
+		if (res.status == "OK") {
+			console.log(`Table ${name} has ${res.size} keys`);
+		} else {
+			console.log("Error getting table size: "+res.status);
+		}
+		rl.prompt();
+	});
+}
+
+function tableSizeQ() {
+	rl.question("Table name: ", name => {
+		rl.history = rl.history.slice(1);
+		tableSize(name);
+	});
+}
+
+function tableKeys(name) {
+	conn.tableKeys(name, function(res, err) {
+		if (res.status == "OK") {
+			console.log(`Table ${name} has the following keys: ${JSON.stringify(res.keys)}`);
+		} else {
+			console.log("Error getting table keys: "+res.status);
+		}
+		rl.prompt();
+	});
+}
+
+function tableKeysQ() {
+	rl.question("Table name: ", name => {
+		rl.history = rl.history.slice(1);
+		tableKeys(name);
 	});
 }
 
