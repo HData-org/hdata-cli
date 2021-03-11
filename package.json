@@ -1,5 +1,45 @@
 {
+	"name": "hdata-cli",
+	"version": "2.1.11",
+	"description": "A CLI interface for interacting with an HData server",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/HData-org/hdata-cli.git"
+	},
+	"keywords": [
+		"hdata",
+		"database",
+		"data",
+		"cli"
+	],
+	"author": {
+		"name": "Benjamin Border",
+		"email": "ben@bunnbuns.net",
+		"url": "https://bunnbuns.net"
+	},
+	"contributors": [
+		{
+			"name": "Benjamin Border",
+			"email": "ben@bunnbuns.net",
+			"url": "https://bunnbuns.net"
+		},
+		{
+			"name": "Joshua Herron",
+			"email": "herronjo@joshiepoo.com",
+			"url": "https://joshiepoo.com"
+		}
+	],
+	"bin": {
+		"hdata-cli": "index.js"
+	},
+	"bugs": {
+		"url": "https://github.com/HData-org/hdata-cli/issues"
+	},
+	"homepage": "https://github.com/HData-org/hdata-cli#readme",
 	"dependencies": {
-		"hdata": "^2.1.10"
+		"hdata": "^2.1.11"
 	}
 }
