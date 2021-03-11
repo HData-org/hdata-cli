@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const HData = require('hdata').HData;
 var conn;
 const readline = require('readline');

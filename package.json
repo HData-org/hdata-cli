@@ -1,6 +1,6 @@
 {
 	"name": "hdata-cli",
-	"version": "2.1.11",
+	"version": "2.1.12",
 	"description": "A CLI interface for interacting with an HData server",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
