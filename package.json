@@ -1,6 +1,6 @@
 {
 	"name": "hdata-cli",
-	"version": "2.1.12",
+	"version": "2.1.13",
 	"description": "A CLI interface for interacting with an HData server",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
@@ -40,6 +40,6 @@
 	},
 	"homepage": "https://github.com/HData-org/hdata-cli#readme",
 	"dependencies": {
-		"hdata": "^2.1.11"
+		"hdata": "^2.1.13"
 	}
 }

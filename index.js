@@ -28,6 +28,9 @@ function cli() {
 				console.log("Command does not exist");
 				rl.prompt();
 				break;
+			case '' :
+				rl.prompt();
+				break;
 			case 'status' :
 				status();
 				break;
@@ -72,8 +75,12 @@ function cli() {
 				} else {
 					var username = keys[1];
 					var property = keys[2];
-					var value = JSON.parse(keys.slice(3, keys.length).join(" "));
-					updateUser(username, property, value);
+					var value = keys.slice(3, keys.length).join(" ");
+					var valuets;
+					try {
+						valuets = JSON.parse(value);
+					} catch(err) {}
+					updateUser(username, property, valuets);
 				}
 				break;
 			case 'updatepassword' :
@@ -306,7 +313,11 @@ function updateUserQ() {
 			rl.history = rl.history.slice(1);
 			rl.question("Value: ", value => {
 				rl.history = rl.history.slice(1);
-				updateUser(username, property, JSON.parse(value));
+				var valuets;
+				try {
+					valuets = JSON.parse(value);
+				} catch(err) {}
+				updateUser(username, property, valuets);
 			});
 		});
 	});
@@ -428,8 +439,8 @@ function setKeyQ() {
 	});
 }
 
-function deleteKey(name) {
-	conn.deleteKey(name, function(res, err) {
+function deleteKey(table, name) {
+	conn.deleteKey(table, name, function(res, err) {
 		if (res.status == "OK") {
 			console.log("Key deleted successfully");
 		} else {
@@ -475,7 +486,7 @@ function queryAllQ() {
 }
 
 function queryTable(name, query) {
-	conn.queryAll(name, query, function(res, err) {
+	conn.queryTable(name, query, function(res, err) {
 		if (res.status == "OK") {
 			console.log(res.matches);
 		} else {
