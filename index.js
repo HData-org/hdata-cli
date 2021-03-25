@@ -78,9 +78,12 @@ function cli() {
 					var value = keys.slice(3, keys.length).join(" ");
 					var valuets;
 					try {
-						valuets = JSON.parse(value);
-					} catch(err) {}
-					updateUser(username, property, valuets);
+						valuets = eval(value);
+						updateUser(username, property, valuets);
+					} catch(err) {
+						console.log("Error: malformed JSON");
+						rl.prompt();
+					}
 				}
 				break;
 			case 'updatepassword' :
@@ -119,9 +122,12 @@ function cli() {
 					var key = keys[2];
 					var value;
 					try {
-						value = JSON.parse(keys.slice(3, keys.length).join(" "));
-					} catch(err) {}
-					setKey(table, key, value);
+						value = eval(keys.slice(3, keys.length).join(" "));
+						setKey(table, key, value);
+					} catch(err) {
+						console.log("Error: malformed JSON");
+						rl.prompt();
+					}
 				}
 				break;
 			case 'deletekey' :
@@ -201,7 +207,6 @@ function getStatus() {
 			console.clear();
 			console.log(`HData server v${res.version}`);
 			console.log(`Server has the status: ${res.status}, and has ${res.jobs} pending jobs. ${res.tables} tables exist in the database.\n\r`);
-			
 			cli();
 		} else {
 			console.log(err);
@@ -318,9 +323,12 @@ function updateUserQ() {
 				rl.history = rl.history.slice(1);
 				var valuets;
 				try {
-					valuets = JSON.parse(value);
-				} catch(err) {}
-				updateUser(username, property, valuets);
+					valuets = eval(value);
+					updateUser(username, property, valuets);
+				} catch(err) {
+					console.log("Error: malformed JSON");
+					rl.prompt();
+				}
 			});
 		});
 	});
@@ -438,9 +446,12 @@ function setKeyQ() {
 				rl.history = rl.history.slice(1);
 				var valuets;
 				try {
-					valuets = JSON.parse(value);
-				} catch(err) {}
-				setKey(name, key, valuets);
+					valuets = eval(value);
+					setKey(name, key, valuets);
+				} catch(err) {
+					console.log("Error: malformed JSON");
+					rl.prompt();
+				}
 			});
 		});
 	});
