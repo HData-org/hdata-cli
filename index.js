@@ -117,7 +117,10 @@ function cli() {
 				} else {
 					var table = keys[1];
 					var key = keys[2];
-					var value = JSON.parse(keys.slice(3, keys.length).join(" "));
+					var value;
+					try {
+						value = JSON.parse(keys.slice(3, keys.length).join(" "));
+					} catch(err) {}
 					setKey(table, key, value);
 				}
 				break;
@@ -433,7 +436,11 @@ function setKeyQ() {
 			rl.history = rl.history.slice(1);
 			rl.question("Value: ", value => {
 				rl.history = rl.history.slice(1);
-				setKey(name, key, value);
+				var valuets;
+				try {
+					valuets = JSON.parse(value);
+				} catch(err) {}
+				setKey(name, key, valuets);
 			});
 		});
 	});
